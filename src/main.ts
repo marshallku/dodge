@@ -38,6 +38,7 @@ class App {
     }
 
     #gameStart() {
+        this.#player.resetPosition();
         this.#gameOver = false;
         this.#bullets = [...Array(CANVAS_SIZE / 20)].map(
             this.#createRandomBullet

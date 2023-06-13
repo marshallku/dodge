@@ -5,6 +5,8 @@ export default class Player extends Square {
     #velocity: number;
     #keyboardStatus: KeyboardStatus;
     #validKeys: string[];
+    #canvasSize: number;
+    #size: number;
 
     constructor({ canvasSize, velocity }: PlayerProps) {
         const size = 8;
@@ -16,6 +18,8 @@ export default class Player extends Square {
             color: "red",
         });
 
+        this.#canvasSize = canvasSize;
+        this.#size = size;
         this.#velocity = velocity;
 
         const validKeys: (keyof KeyboardStatus)[] = [
@@ -31,6 +35,13 @@ export default class Player extends Square {
             ArrowLeft: false,
         };
         this.#validKeys = validKeys;
+    }
+
+    resetPosition() {
+        super.update({
+            x: this.#canvasSize / 2 - this.#size / 2,
+            y: this.#canvasSize / 2 - this.#size / 2,
+        });
     }
 
     move() {
