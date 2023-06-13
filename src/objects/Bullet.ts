@@ -1,7 +1,7 @@
-import { Figure } from "../vectors";
+import { Square } from "../vectors";
 import { MovingObject } from "./types";
 
-export default class Bullet extends Figure {
+export default class Bullet extends Square {
     #xAcceleration: number;
     #yAcceleration: number;
 
