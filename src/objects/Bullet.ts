@@ -1,12 +1,13 @@
-import { Coordinate, Square } from "../vectors";
+import { Square } from "../vectors";
 import { MovingObject } from "./types";
 
 export default class Bullet extends Square {
     #xAcceleration: number;
     #yAcceleration: number;
 
-    constructor(props: Partial<MovingObject>) {
+    constructor(props: Partial<MovingObject> = {}) {
         super(props);
+        console.log(props);
         this.#xAcceleration = props.xAcceleration || 1;
         this.#yAcceleration = props.yAcceleration || 1;
     }
