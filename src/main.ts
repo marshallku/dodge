@@ -13,6 +13,7 @@ class App {
     #bullets: Bullet[];
     #gameOver: boolean;
     #timeStamp: number;
+    #difficulty: number;
 
     constructor() {
         const canvas = new Canvas(CANVAS_SIZE, CANVAS_SIZE);
@@ -35,12 +36,14 @@ class App {
         });
         this.#bullets = [];
         this.#timeStamp = 0;
+        this.#difficulty = 0;
     }
 
     #gameStart() {
         this.#player.resetPosition();
         this.#gameOver = false;
-        this.#bullets = [...Array(CANVAS_SIZE / 20)].map(
+        this.#difficulty = 0;
+        this.#bullets = [...Array(CANVAS_SIZE / 10)].map(
             this.#createRandomBullet
         );
         this.#render(0);
@@ -85,22 +88,37 @@ class App {
         this.#canvas.clear();
 
         // Score
-        const score = (time - this.#timeStamp) / 1000;
-        const fontSize = 16;
+        const timeGap = (time - this.#timeStamp) / 1000;
+        const fontSize = 12;
         const font = "Helvetica, Arial, sans-serif";
-        this.#context.fillText(
-            score.toFixed(2),
-            CANVAS_SIZE - 10,
-            fontSize + 10
-        );
 
         this.#context.font = `${fontSize}px ${font}`;
-        this.#context.textAlign = "right";
         this.#context.fillStyle = "white";
+
+        this.#context.textAlign = "left";
+        this.#context.fillText(
+            `${this.#bullets.length} bullets`,
+            10,
+            CANVAS_SIZE - 10,
+            CANVAS_SIZE
+        );
+
+        this.#context.textAlign = "right";
+        this.#context.fillText(
+            `${timeGap.toFixed(2)}s`,
+            CANVAS_SIZE - 10,
+            CANVAS_SIZE - 10
+        );
 
         // Player
         this.#player.move();
         this.#player.render(this.#context);
+
+        // Make it more difficult
+        if (5 <= timeGap - this.#difficulty) {
+            this.#difficulty = timeGap;
+            this.#bullets.push(this.#createRandomBullet());
+        }
 
         // Iterate bullets
         for (let i = this.#bullets.length - 1; 0 <= i; --i) {
