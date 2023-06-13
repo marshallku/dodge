@@ -1,4 +1,4 @@
-import { Figure } from "./types";
+import { Coordinate, Figure } from "./types";
 
 export default class Square {
     #x: number;
@@ -34,5 +34,15 @@ export default class Square {
             this.#size
         );
         context.stroke();
+    }
+
+    update({ x, y }: Coordinate) {
+        this.#x = x;
+        this.#y = y;
+    }
+
+    move({ x, y }: Coordinate) {
+        this.#x += x;
+        this.#y += y;
     }
 }
