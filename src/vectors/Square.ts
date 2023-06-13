@@ -1,3 +1,4 @@
+import { Canvas } from "../components";
 import { Coordinate, Figure } from "./types";
 
 export default class Square {
@@ -44,5 +45,14 @@ export default class Square {
     move({ x, y }: Coordinate) {
         this.#x += x;
         this.#y += y;
+    }
+
+    getVisibility(canvas: Canvas) {
+        return (
+            this.#x < 0 ||
+            canvas.width < this.#x + this.#size ||
+            this.#y < 0 ||
+            canvas.height < this.#y + this.#size
+        );
     }
 }
