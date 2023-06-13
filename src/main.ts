@@ -12,6 +12,7 @@ class App {
     #player: Player;
     #bullets: Bullet[];
     #gameOver: boolean;
+    #timeStamp: number;
 
     constructor() {
         const canvas = new Canvas(CANVAS_SIZE, CANVAS_SIZE);
@@ -33,6 +34,7 @@ class App {
             once: true,
         });
         this.#bullets = [];
+        this.#timeStamp = 0;
     }
 
     #gameStart() {
@@ -60,7 +62,7 @@ class App {
         });
     }
 
-    #render(this: App, time: number) {
+    #render(this: App, time: number, stamp = false) {
         if (this.#gameOver) {
             this.#renderStatusScreen("Game Over", "Press any key to retry");
             document.addEventListener("keydown", this.#gameStart.bind(this), {
@@ -70,12 +72,30 @@ class App {
         }
 
         if (time === 0) {
-            window.requestAnimationFrame(this.#render.bind(this));
+            window.requestAnimationFrame((x) => this.#render(x, true));
             return;
+        }
+
+        if (stamp) {
+            this.#timeStamp = time;
         }
 
         window.requestAnimationFrame(this.#render.bind(this));
         this.#canvas.clear();
+
+        // Score
+        const score = (time - this.#timeStamp) / 1000;
+        const fontSize = 16;
+        const font = "Helvetica, Arial, sans-serif";
+        this.#context.fillText(
+            score.toFixed(2),
+            CANVAS_SIZE - 10,
+            fontSize + 10
+        );
+
+        this.#context.font = `${fontSize}px ${font}`;
+        this.#context.textAlign = "right";
+        this.#context.fillStyle = "white";
 
         // Player
         this.#player.move();
