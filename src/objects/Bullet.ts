@@ -7,7 +7,6 @@ export default class Bullet extends Square {
 
     constructor(props: Partial<MovingObject> = {}) {
         super(props);
-        console.log(props);
         this.#xAcceleration = props.xAcceleration || 1;
         this.#yAcceleration = props.yAcceleration || 1;
     }
