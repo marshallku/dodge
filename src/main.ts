@@ -11,11 +11,13 @@ class App {
     #context: CanvasRenderingContext2D;
     #player: Player;
     #bullets: Bullet[];
+    #gameOver: boolean;
 
     constructor() {
         const canvas = new Canvas(CANVAS_SIZE, CANVAS_SIZE);
 
         this.#app = document.getElementById("app")!;
+        this.#gameOver = false;
         this.#canvas = canvas;
         this.#context = canvas.getContext();
         canvas.render(this.#app);
@@ -26,19 +28,19 @@ class App {
         });
         this.#player.bindEvents();
 
-        // Initialize bullets
+        this.#renderStatusScreen("DODGE", "Press any key to start");
+        document.addEventListener("keydown", this.#gameStart.bind(this), {
+            once: true,
+        });
+        this.#bullets = [];
+    }
+
+    #gameStart() {
+        this.#gameOver = false;
         this.#bullets = [...Array(CANVAS_SIZE / 20)].map(
             this.#createRandomBullet
         );
-
-        this.#renderStatusScreen("DODGE", "Press any key to start");
-        document.addEventListener(
-            "keydown",
-            () => {
-                this.#render(0);
-            },
-            { once: true }
-        );
+        this.#render(0);
     }
 
     #createRandomBullet() {
@@ -59,6 +61,14 @@ class App {
     }
 
     #render(this: App, time: number) {
+        if (this.#gameOver) {
+            this.#renderStatusScreen("Game Over", "Press any key to retry");
+            document.addEventListener("keydown", this.#gameStart.bind(this), {
+                once: true,
+            });
+            return;
+        }
+
         if (time === 0) {
             window.requestAnimationFrame(this.#render.bind(this));
             return;
@@ -80,7 +90,7 @@ class App {
             bullet.render(this.#context);
 
             if (collision) {
-                console.log("colliding");
+                this.#gameOver = true;
             }
 
             if (!bullet.getVisibility(this.#canvas)) {
