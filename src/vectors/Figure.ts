@@ -1,7 +1,7 @@
 import { Canvas } from "../components";
-import { Coordinate, Figure } from "./types";
+import { Coordinate, FigureProps } from "./types";
 
-export default class Square {
+export default class Figure {
     x: number;
     y: number;
     size: number;
@@ -14,7 +14,7 @@ export default class Square {
         size = 1,
         lineWidth = 1,
         color = "black",
-    }: Partial<Figure> = {}) {
+    }: Partial<FigureProps> = {}) {
         this.x = x;
         this.y = y;
         this.size = size;
@@ -22,14 +22,8 @@ export default class Square {
         this.color = color;
     }
 
-    render(context: CanvasRenderingContext2D) {
-        const padding = Math.ceil(this.lineWidth / 2);
-
-        context.beginPath();
-        context.lineWidth = this.lineWidth;
-        context.strokeStyle = this.color;
-        context.rect(this.x + padding, this.y + padding, this.size, this.size);
-        context.stroke();
+    render(_: CanvasRenderingContext2D) {
+        throw new Error("Implement render method");
     }
 
     update({ x, y }: Coordinate) {
@@ -51,12 +45,12 @@ export default class Square {
         );
     }
 
-    checkCollision(square: Square) {
+    checkCollision(figure: Figure) {
         return (
-            this.x + this.size >= square.x &&
-            this.x <= square.x + square.size &&
-            this.y + this.size >= square.y &&
-            this.y <= square.y + square.size
+            this.x + this.size >= figure.x &&
+            this.x <= figure.x + figure.size &&
+            this.y + this.size >= figure.y &&
+            this.y <= figure.y + figure.size
         );
     }
 }

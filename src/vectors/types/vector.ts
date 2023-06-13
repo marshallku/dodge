@@ -3,7 +3,7 @@ export interface Coordinate {
     y: number;
 }
 
-export interface Figure extends Coordinate {
+export interface FigureProps extends Coordinate {
     size: number;
     lineWidth: number;
     color: string;

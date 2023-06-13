@@ -1,7 +1,7 @@
-import { Square } from "../vectors";
+import { Figure } from "../vectors";
 import { KeyboardStatus, PlayerProps } from "./types";
 
-export default class Player extends Square {
+export default class Player extends Figure {
     #velocity: number;
     #keyboardStatus: KeyboardStatus;
     #validKeys: string[];
