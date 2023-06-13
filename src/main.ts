@@ -1,18 +1,30 @@
 import { Canvas } from "./components";
-import { Square } from "./vectors";
 import "./style.css";
 
-function main() {
-    const app = document.getElementById("app");
-    const canvas = new Canvas(500, 500);
-    const square = new Square({ color: "white" });
+const CANVAS_SIZE = 500;
 
-    if (!app) {
-        throw new Error("App doesn't exist");
+class App {
+    #app: HTMLElement;
+    #canvas: Canvas;
+
+    constructor() {
+        const canvas = new Canvas(CANVAS_SIZE, CANVAS_SIZE);
+
+        this.#app = document.getElementById("app")!;
+        this.#canvas = canvas;
+        canvas.render(this.#app);
+        this.#render(0);
     }
 
-    canvas.render(app);
-    square.render(canvas.getContext());
+    #render(this: App, time: number) {
+        if (time === 0) {
+            window.requestAnimationFrame(this.#render.bind(this));
+            return;
+        }
+
+        window.requestAnimationFrame(this.#render.bind(this));
+        this.#canvas.clear();
+    }
 }
 
-main();
+new App();
