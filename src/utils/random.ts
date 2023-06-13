@@ -11,3 +11,7 @@ export function getRandomIntInclusive(min = 0, max = 1) {
         Math.random() * (refinedMax - refinedMin + 1) + refinedMin
     );
 }
+
+export function getRandomBoolean() {
+    return Math.random() < 0.5;
+}
