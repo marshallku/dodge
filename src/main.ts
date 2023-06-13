@@ -19,7 +19,7 @@ class App {
         const canvas = new Canvas(CANVAS_SIZE, CANVAS_SIZE);
 
         this.#app = document.getElementById("app")!;
-        this.#gameOver = false;
+        this.#gameOver = true;
         this.#canvas = canvas;
         this.#context = canvas.getContext();
         canvas.render(this.#app);
@@ -30,13 +30,19 @@ class App {
         });
         this.#player.bindEvents();
 
-        this.#renderStatusScreen("DODGE", "Press any key to start");
-        document.addEventListener("keydown", this.#gameStart.bind(this), {
-            once: true,
-        });
+        this.#renderStatusScreen("DODGE", "Press space to start");
+        document.addEventListener("keydown", this.#handleKeydown.bind(this));
         this.#bullets = [];
         this.#timeStamp = 0;
         this.#difficulty = 0;
+    }
+
+    #handleKeydown({ key }: KeyboardEvent) {
+        if (key !== " " || !this.#gameOver) {
+            return;
+        }
+
+        this.#gameStart();
     }
 
     #gameStart() {
@@ -68,10 +74,7 @@ class App {
 
     #render(this: App, time: number, stamp = false) {
         if (this.#gameOver) {
-            this.#renderStatusScreen("Game Over", "Press any key to retry");
-            document.addEventListener("keydown", this.#gameStart.bind(this), {
-                once: true,
-            });
+            this.#renderStatusScreen("Game Over", "Press space to retry");
             return;
         }
 
