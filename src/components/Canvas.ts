@@ -1,17 +1,15 @@
 export default class Canvas {
+    width: number;
+    height: number;
     #canvas: HTMLCanvasElement;
-    constructor(width?: number, height?: number) {
+
+    constructor(width = 500, height = 500) {
         const canvas = document.createElement("canvas");
 
-        if (width) {
-            canvas.width = width;
-        }
-
-        if (height) {
-            canvas.height = height;
-        }
-
+        this.width = width;
+        this.height = height;
         this.#canvas = canvas;
+        this.#updateSize();
     }
 
     render(element = document.body) {
@@ -20,6 +18,10 @@ export default class Canvas {
 
     destroy() {
         this.#canvas.remove();
+    }
+
+    clear() {
+        this.getContext().clearRect(0, 0, this.width, this.height);
     }
 
     getCanvas() {
@@ -37,7 +39,13 @@ export default class Canvas {
     }
 
     setSize(width: number, height: number) {
-        this.#canvas.width = width;
-        this.#canvas.height = height;
+        this.width = width;
+        this.height = height;
+        this.#updateSize();
+    }
+
+    #updateSize() {
+        this.#canvas.width = this.width;
+        this.#canvas.height = this.height;
     }
 }
