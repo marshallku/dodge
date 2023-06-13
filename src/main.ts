@@ -57,7 +57,7 @@ class App {
 
     #createRandomBullet() {
         const sign = getRandomBoolean();
-        const size = 5;
+        const size = 2;
         const randomCoord = getRandomIntInclusive(0, 500);
         const restCoord = sign ? CANVAS_SIZE + size : -size;
         const horizontalSide = getRandomBoolean();
