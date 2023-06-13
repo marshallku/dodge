@@ -48,11 +48,11 @@ export default class Square {
     }
 
     getVisibility(canvas: Canvas) {
-        return (
-            this.#x < 0 ||
-            canvas.width < this.#x + this.#size ||
-            this.#y < 0 ||
-            canvas.height < this.#y + this.#size
+        return !(
+            this.#x < -this.#size ||
+            canvas.width + this.#size < this.#x ||
+            this.#y < -this.#size ||
+            canvas.height + this.#size < this.#y
         );
     }
 }
