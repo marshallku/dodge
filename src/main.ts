@@ -19,7 +19,6 @@ class App {
         this.#canvas = canvas;
         this.#context = canvas.getContext();
         canvas.render(this.#app);
-        this.#render(0);
 
         this.#player = new Player({
             canvasSize: CANVAS_SIZE,
@@ -30,6 +29,15 @@ class App {
         // Initialize bullets
         this.#bullets = [...Array(CANVAS_SIZE / 20)].map(
             this.#createRandomBullet
+        );
+
+        this.#renderStatusScreen("DODGE", "Press any key to start");
+        document.addEventListener(
+            "keydown",
+            () => {
+                this.#render(0);
+            },
+            { once: true }
         );
     }
 
@@ -46,6 +54,7 @@ class App {
             size,
             xAcceleration: getRandomIntInclusive(1, 3) * (sign ? -1 : 1),
             yAcceleration: getRandomIntInclusive(1, 3) * (sign ? -1 : 1),
+            color: "white",
         });
     }
 
@@ -78,6 +87,34 @@ class App {
                 this.#bullets.splice(i, 1);
                 this.#bullets.push(this.#createRandomBullet());
             }
+        }
+    }
+
+    #renderStatusScreen(title: string, subheading?: string) {
+        const font = "Helvetica, Arial, sans-serif";
+
+        this.#context.textAlign = "center";
+        this.#context.fillStyle = "white";
+
+        // Title
+        const titleFontSize = 32;
+        const titleLineHeight = 1.5;
+        const titleYPosition =
+            CANVAS_SIZE / 2 - titleFontSize * titleLineHeight;
+
+        this.#context.font = `${titleFontSize}px ${font}`;
+        this.#context.fillText(title, CANVAS_SIZE / 2, titleYPosition);
+
+        // Subheading
+        if (subheading) {
+            const subheadingFontSize = 16;
+
+            this.#context.font = `${subheadingFontSize}px ${font}`;
+            this.#context.fillText(
+                subheading,
+                CANVAS_SIZE / 2,
+                titleYPosition + titleFontSize * titleLineHeight
+            );
         }
     }
 }
