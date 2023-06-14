@@ -11,6 +11,7 @@ class App {
     #context: CanvasRenderingContext2D;
     #player: Player;
     #bullets: Bullet[];
+    #aimedBullets: Bullet[];
     #gameOver: boolean;
     #timeStamp: number;
     #difficulty: number;
@@ -33,6 +34,7 @@ class App {
         this.#renderStatusScreen("DODGE", "Press space to start");
         document.addEventListener("keydown", this.#handleKeydown.bind(this));
         this.#bullets = [];
+        this.#aimedBullets = [];
         this.#timeStamp = 0;
         this.#difficulty = 0;
     }
@@ -70,6 +72,41 @@ class App {
             yAcceleration: getRandomIntInclusive(1, 3) * (sign ? -1 : 1),
             color: "white",
         });
+    }
+
+    #createAimedBullet() {
+        const sign = getRandomBoolean();
+        const size = 2;
+        const randomCoord = getRandomIntInclusive(0, 500);
+        const restCoord = sign ? CANVAS_SIZE + size : -size;
+        const horizontalSide = getRandomBoolean();
+        const playerX = this.#player.x;
+        const playerY = this.#player.y;
+        const x = horizontalSide ? randomCoord : restCoord;
+        const y = horizontalSide ? restCoord : randomCoord;
+        const rate = getRandomIntInclusive(40, 60);
+        const xAcceleration = (playerX - x) / rate;
+        const yAcceleration = (playerY - y) / rate;
+
+        return new Bullet({
+            x,
+            y,
+            size,
+            xAcceleration,
+            yAcceleration,
+            color: "skyblue",
+        });
+    }
+
+    #updateBullet(bullet: Bullet) {
+        const collision = bullet.checkCollision(this.#player);
+
+        bullet.move();
+        bullet.render(this.#context);
+
+        if (collision) {
+            this.#gameOver = true;
+        }
     }
 
     #render(this: App, time: number, stamp = false) {
@@ -121,23 +158,28 @@ class App {
         if (5 <= timeGap - this.#difficulty) {
             this.#difficulty = timeGap;
             this.#bullets.push(this.#createRandomBullet());
+            this.#aimedBullets.push(this.#createAimedBullet());
         }
 
         // Iterate bullets
         for (let i = this.#bullets.length - 1; 0 <= i; --i) {
             const bullet = this.#bullets[i];
-            const collision = bullet.checkCollision(this.#player);
 
-            bullet.move();
-            bullet.render(this.#context);
-
-            if (collision) {
-                this.#gameOver = true;
-            }
+            this.#updateBullet(bullet);
 
             if (!bullet.getVisibility(this.#canvas)) {
                 this.#bullets.splice(i, 1);
                 this.#bullets.push(this.#createRandomBullet());
+            }
+        }
+
+        for (let i = this.#aimedBullets.length - 1; 0 <= i; --i) {
+            const bullet = this.#aimedBullets[i];
+
+            this.#updateBullet(bullet);
+
+            if (!bullet.getVisibility(this.#canvas)) {
+                this.#aimedBullets.splice(i, 1);
             }
         }
     }
