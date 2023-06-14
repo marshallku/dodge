@@ -167,7 +167,7 @@ class App {
         this.#player.render(this.#context);
 
         // Make it more difficult
-        if (5 <= timeGap - this.#difficulty) {
+        if (2 <= timeGap - this.#difficulty) {
             this.#difficulty = timeGap;
             this.#bullets.push(this.#createRandomBullet());
             this.#aimedBullets.push(this.#createAimedBullet());
