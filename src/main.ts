@@ -15,12 +15,14 @@ class App {
     #gameOver: boolean;
     #timeStamp: number;
     #difficulty: number;
+    #debugMode: boolean;
 
     constructor() {
         const canvas = new Canvas(CANVAS_SIZE, CANVAS_SIZE);
 
         this.#app = document.getElementById("app")!;
         this.#gameOver = true;
+        this.#debugMode = false;
         this.#canvas = canvas;
         this.#context = canvas.getContext();
         canvas.render(this.#app);
@@ -40,6 +42,11 @@ class App {
     }
 
     #handleKeydown({ key }: KeyboardEvent) {
+        if (key === "=" && import.meta.env.MODE === "development") {
+            console.info(`Debug mode is ${this.#debugMode ? "OFF" : "ON"}`);
+            this.#debugMode = !this.#debugMode;
+        }
+
         if (key !== " " || !this.#gameOver) {
             return;
         }
@@ -104,7 +111,7 @@ class App {
         bullet.move();
         bullet.render(this.#context);
 
-        if (collision) {
+        if (collision && !this.#debugMode) {
             this.#gameOver = true;
         }
     }
