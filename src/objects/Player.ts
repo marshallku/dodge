@@ -1,7 +1,9 @@
-import { Square } from "../vectors";
+import { Figure } from "../vectors";
 import { KeyboardStatus, PlayerProps } from "./types";
+import star from "../assets/star.svg";
 
-export default class Player extends Square {
+export default class Player extends Figure {
+    #image: HTMLImageElement;
     #velocity: number;
     #keyboardStatus: KeyboardStatus;
     #validKeys: string[];
@@ -35,6 +37,9 @@ export default class Player extends Square {
             ArrowLeft: false,
         };
         this.#validKeys = validKeys;
+
+        this.#image = new Image(size, size);
+        this.#image.src = star;
     }
 
     resetPosition() {
@@ -42,6 +47,16 @@ export default class Player extends Square {
             x: this.#canvasSize / 2 - this.#size / 2,
             y: this.#canvasSize / 2 - this.#size / 2,
         });
+    }
+
+    render(context: CanvasRenderingContext2D) {
+        context.drawImage(
+            this.#image,
+            this.x - this.#size / 2,
+            this.y - this.#size / 2,
+            this.#size * 2,
+            this.#size * 2
+        );
     }
 
     move() {
