@@ -61,6 +61,7 @@ class App {
         this.#bullets = [...Array(CANVAS_SIZE / 10)].map(
             this.#createRandomBullet
         );
+        this.#aimedBullets = [];
         this.#render(0);
     }
 
