@@ -42,8 +42,8 @@ export default class Player extends Figure {
         };
         this.#validKeys = validKeys;
         this.#directions = {
-            x: 1,
-            y: 1,
+            x: 0,
+            y: 0,
         };
 
         this.#image = new Image(size, size);
@@ -125,13 +125,16 @@ export default class Player extends Figure {
     }
 
     #handleDeviceOrientation({ beta, gamma }: DeviceOrientationEvent) {
+        if (beta == null || gamma == null) {
+            return;
+        }
+
         const speed = 3;
         // Comfort degree when holding phone
         const betaStabilizer = 50;
-        const x = Math.min(1, Math.max((gamma || 0) / 90, -1)) * speed;
+        const x = Math.min(1, Math.max(gamma / 90, -1)) * speed;
         const y =
-            Math.min(1, Math.max(((beta || 0) - betaStabilizer) / 180, -1)) *
-            speed;
+            Math.min(1, Math.max((beta - betaStabilizer) / 180, -1)) * speed;
 
         this.#directions = { x, y };
     }
