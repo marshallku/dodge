@@ -13,7 +13,7 @@ export default class Player extends Figure {
     #directions: Coordinate;
     useKeyboard: boolean;
 
-    constructor({ canvasSize, velocity, boundary }: PlayerProps) {
+    constructor({ canvasSize, boundary }: PlayerProps) {
         const size = 8;
 
         super({
@@ -25,7 +25,7 @@ export default class Player extends Figure {
 
         this.#canvasSize = canvasSize;
         this.#size = size;
-        this.#velocity = velocity;
+        this.#velocity = 200;
         this.#boundary = boundary;
 
         const validKeys: (keyof KeyboardStatus)[] = [
