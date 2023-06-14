@@ -59,38 +59,38 @@ export default class Player extends Figure {
         );
     }
 
-    move() {
+    moveTo(deltaTime: number) {
         const { ArrowUp, ArrowRight, ArrowDown, ArrowLeft } =
             this.#keyboardStatus;
 
         if (ArrowUp) {
-            this.moveUp();
+            this.moveUp(deltaTime);
         }
         if (ArrowRight) {
-            this.moveRight();
+            this.moveRight(deltaTime);
         }
         if (ArrowDown) {
-            this.moveDown();
+            this.moveDown(deltaTime);
         }
         if (ArrowLeft) {
-            this.moveLeft();
+            this.moveLeft(deltaTime);
         }
     }
 
-    moveUp() {
-        super.move({ x: 0, y: Math.min(-this.#velocity) });
+    moveUp(deltaTime: number) {
+        super.move({ x: 0, y: Math.min(-this.#velocity) * deltaTime });
     }
 
-    moveRight() {
-        super.move({ x: this.#velocity, y: 0 });
+    moveRight(deltaTime: number) {
+        super.move({ x: this.#velocity * deltaTime, y: 0 });
     }
 
-    moveDown() {
-        super.move({ x: 0, y: this.#velocity });
+    moveDown(deltaTime: number) {
+        super.move({ x: 0, y: this.#velocity * deltaTime });
     }
 
-    moveLeft() {
-        super.move({ x: -this.#velocity, y: 0 });
+    moveLeft(deltaTime: number) {
+        super.move({ x: -this.#velocity * deltaTime, y: 0 });
     }
 
     bindEvents() {

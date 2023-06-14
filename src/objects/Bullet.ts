@@ -11,7 +11,10 @@ export default class Bullet extends Circle {
         this.#yAcceleration = props.yAcceleration || 1;
     }
 
-    move() {
-        super.move({ x: this.#xAcceleration, y: this.#yAcceleration });
+    moveTo(deltaTime: number) {
+        super.move({
+            x: this.#xAcceleration * deltaTime,
+            y: this.#yAcceleration * deltaTime,
+        });
     }
 }

@@ -14,6 +14,7 @@ class App {
     #aimedBullets: Bullet[];
     #gameOver: boolean;
     #timeStamp: number;
+    #lastPaint: number;
     #difficulty: number;
     #debugMode: boolean;
 
@@ -29,7 +30,7 @@ class App {
 
         this.#player = new Player({
             canvasSize: CANVAS_SIZE,
-            velocity: 2.5,
+            velocity: 250,
         });
         this.#player.bindEvents();
 
@@ -38,6 +39,7 @@ class App {
         this.#bullets = [];
         this.#aimedBullets = [];
         this.#timeStamp = 0;
+        this.#lastPaint = 0;
         this.#difficulty = 0;
     }
 
@@ -58,6 +60,8 @@ class App {
         this.#player.resetPosition();
         this.#gameOver = false;
         this.#difficulty = 0;
+        this.#timeStamp = 0;
+        this.#lastPaint = 0;
         this.#bullets = [...Array(CANVAS_SIZE / 10)].map(
             this.#createRandomBullet
         );
@@ -80,9 +84,11 @@ class App {
             y,
             size,
             xAcceleration:
-                getRandomIntInclusive(1, 3) * (x < halfSize ? 1 : -1),
+                (getRandomIntInclusive(1000, 2000) / 10) *
+                (x < halfSize ? 1 : -1),
             yAcceleration:
-                getRandomIntInclusive(1, 3) * (y < halfSize ? 1 : -1),
+                (getRandomIntInclusive(1000, 2000) / 10) *
+                (y < halfSize ? 1 : -1),
             color: "#FF8551",
         });
     }
@@ -97,7 +103,7 @@ class App {
         const playerY = this.#player.y;
         const x = horizontalSide ? randomCoord : restCoord;
         const y = horizontalSide ? restCoord : randomCoord;
-        const rate = getRandomIntInclusive(40, 60);
+        const rate = getRandomIntInclusive(80, 120) / 100;
         const xAcceleration = (playerX - x) / rate;
         const yAcceleration = (playerY - y) / rate;
 
@@ -111,10 +117,10 @@ class App {
         });
     }
 
-    #updateBullet(bullet: Bullet) {
+    #updateBullet(bullet: Bullet, deltaTime: number) {
         const collision = bullet.checkCollision(this.#player);
 
-        bullet.move();
+        bullet.moveTo(deltaTime);
         bullet.render(this.#context);
 
         if (collision && !this.#debugMode) {
@@ -128,7 +134,11 @@ class App {
             return;
         }
 
-        if (time === 0) {
+        const deltaTime = (stamp ? 0 : time - this.#lastPaint) / 1000;
+
+        this.#lastPaint = time;
+
+        if (time === 0 || this.#lastPaint === 0) {
             window.requestAnimationFrame((x) => this.#render(x, true));
             return;
         }
@@ -164,7 +174,7 @@ class App {
         );
 
         // Player
-        this.#player.move();
+        this.#player.moveTo(deltaTime);
         this.#player.render(this.#context);
 
         // Make it more difficult
@@ -178,7 +188,7 @@ class App {
         for (let i = this.#bullets.length - 1; 0 <= i; --i) {
             const bullet = this.#bullets[i];
 
-            this.#updateBullet(bullet);
+            this.#updateBullet(bullet, deltaTime);
 
             if (!bullet.getVisibility(this.#canvas)) {
                 this.#bullets.splice(i, 1);
@@ -189,7 +199,7 @@ class App {
         for (let i = this.#aimedBullets.length - 1; 0 <= i; --i) {
             const bullet = this.#aimedBullets[i];
 
-            this.#updateBullet(bullet);
+            this.#updateBullet(bullet, deltaTime);
 
             if (!bullet.getVisibility(this.#canvas)) {
                 this.#aimedBullets.splice(i, 1);
