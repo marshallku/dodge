@@ -1,4 +1,4 @@
-import { Figure } from "../vectors";
+import { Coordinate, Figure } from "../vectors";
 import { KeyboardStatus, PlayerProps } from "./types";
 import star from "../assets/star.svg";
 
@@ -8,9 +8,10 @@ export default class Player extends Figure {
     #keyboardStatus: KeyboardStatus;
     #validKeys: string[];
     #canvasSize: number;
+    #boundary: Coordinate;
     #size: number;
 
-    constructor({ canvasSize, velocity }: PlayerProps) {
+    constructor({ canvasSize, velocity, boundary }: PlayerProps) {
         const size = 8;
 
         super({
@@ -23,6 +24,7 @@ export default class Player extends Figure {
         this.#canvasSize = canvasSize;
         this.#size = size;
         this.#velocity = velocity;
+        this.#boundary = boundary;
 
         const validKeys: (keyof KeyboardStatus)[] = [
             "ArrowUp",
@@ -78,19 +80,22 @@ export default class Player extends Figure {
     }
 
     moveUp(deltaTime: number) {
-        super.move({ x: 0, y: Math.min(-this.#velocity) * deltaTime });
+        super.move(
+            { x: 0, y: Math.min(-this.#velocity) * deltaTime },
+            this.#boundary
+        );
     }
 
     moveRight(deltaTime: number) {
-        super.move({ x: this.#velocity * deltaTime, y: 0 });
+        super.move({ x: this.#velocity * deltaTime, y: 0 }, this.#boundary);
     }
 
     moveDown(deltaTime: number) {
-        super.move({ x: 0, y: this.#velocity * deltaTime });
+        super.move({ x: 0, y: this.#velocity * deltaTime }, this.#boundary);
     }
 
     moveLeft(deltaTime: number) {
-        super.move({ x: -this.#velocity * deltaTime, y: 0 });
+        super.move({ x: -this.#velocity * deltaTime, y: 0 }, this.#boundary);
     }
 
     bindEvents() {

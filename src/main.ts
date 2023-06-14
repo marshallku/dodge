@@ -31,6 +31,10 @@ class App {
         this.#player = new Player({
             canvasSize: CANVAS_SIZE,
             velocity: 250,
+            boundary: {
+                x: CANVAS_SIZE,
+                y: CANVAS_SIZE,
+            },
         });
         this.#player.bindEvents();
 

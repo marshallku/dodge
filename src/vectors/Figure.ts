@@ -31,7 +31,12 @@ export default class Figure {
         this.y = y;
     }
 
-    move({ x, y }: Coordinate) {
+    move({ x, y }: Coordinate, boundary?: Coordinate) {
+        if (boundary) {
+            this.x = Math.min(Math.max(0, this.x + x), boundary.x - this.size);
+            this.y = Math.min(Math.max(0, this.y + y), boundary.y - this.size);
+            return;
+        }
         this.x += x;
         this.y += y;
     }

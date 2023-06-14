@@ -1,3 +1,5 @@
+import { Coordinate } from "../../vectors";
+
 export interface KeyboardStatus {
     ArrowUp: boolean;
     ArrowRight: boolean;
@@ -8,4 +10,5 @@ export interface KeyboardStatus {
 export interface PlayerProps {
     canvasSize: number;
     velocity: number;
+    boundary: Coordinate;
 }
