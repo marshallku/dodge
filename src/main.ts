@@ -70,13 +70,18 @@ class App {
         const randomCoord = getRandomIntInclusive(0, 500);
         const restCoord = sign ? CANVAS_SIZE + size : -size;
         const horizontalSide = getRandomBoolean();
+        const x = horizontalSide ? randomCoord : restCoord;
+        const y = horizontalSide ? restCoord : randomCoord;
+        const halfSize = CANVAS_SIZE / 2;
 
         return new Bullet({
-            x: horizontalSide ? randomCoord : restCoord,
-            y: horizontalSide ? restCoord : randomCoord,
+            x,
+            y,
             size,
-            xAcceleration: getRandomIntInclusive(1, 3) * (sign ? -1 : 1),
-            yAcceleration: getRandomIntInclusive(1, 3) * (sign ? -1 : 1),
+            xAcceleration:
+                getRandomIntInclusive(1, 3) * (x < halfSize ? 1 : -1),
+            yAcceleration:
+                getRandomIntInclusive(1, 3) * (y < halfSize ? 1 : -1),
             color: "white",
         });
     }
