@@ -10,6 +10,8 @@ export default class Player extends Figure {
     #canvasSize: number;
     #boundary: Coordinate;
     #size: number;
+    #directions: Coordinate;
+    useKeyboard: boolean;
 
     constructor({ canvasSize, velocity, boundary }: PlayerProps) {
         const size = 8;
@@ -39,9 +41,15 @@ export default class Player extends Figure {
             ArrowLeft: false,
         };
         this.#validKeys = validKeys;
+        this.#directions = {
+            x: 1,
+            y: 1,
+        };
 
         this.#image = new Image(size, size);
         this.#image.src = star;
+
+        this.useKeyboard = false;
     }
 
     resetPosition() {
@@ -62,6 +70,12 @@ export default class Player extends Figure {
     }
 
     moveTo(deltaTime: number) {
+        // Sensor
+        if (!this.useKeyboard) {
+            this.moveDirections(deltaTime);
+        }
+
+        // Keyboard
         const { ArrowUp, ArrowRight, ArrowDown, ArrowLeft } =
             this.#keyboardStatus;
 
@@ -98,6 +112,30 @@ export default class Player extends Figure {
         super.move({ x: -this.#velocity * deltaTime, y: 0 }, this.#boundary);
     }
 
+    moveDirections(deltaTime: number) {
+        const { x, y } = this.#directions;
+
+        super.move(
+            {
+                x: x * this.#velocity * deltaTime,
+                y: y * this.#velocity * deltaTime,
+            },
+            this.#boundary
+        );
+    }
+
+    #handleDeviceOrientation({ beta, gamma }: DeviceOrientationEvent) {
+        const speed = 3;
+        // Comfort degree when holding phone
+        const betaStabilizer = 50;
+        const x = Math.min(1, Math.max((gamma || 0) / 90, -1)) * speed;
+        const y =
+            Math.min(1, Math.max(((beta || 0) - betaStabilizer) / 180, -1)) *
+            speed;
+
+        this.#directions = { x, y };
+    }
+
     bindEvents() {
         document.addEventListener("keydown", ({ key }) => {
             if (this.#validKeys.includes(key)) {
@@ -110,5 +148,11 @@ export default class Player extends Figure {
                 this.#keyboardStatus[key as keyof KeyboardStatus] = false;
             }
         });
+
+        window.addEventListener(
+            "deviceorientation",
+            this.#handleDeviceOrientation.bind(this),
+            { passive: true }
+        );
     }
 }

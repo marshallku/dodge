@@ -14,12 +14,16 @@
     -webkit-text-size-adjust: 100%;
 }
 
+html,
+body {
+    height: 100%;
+}
+
 body {
     margin: 0;
     display: flex;
     place-items: center;
     min-width: 320px;
-    min-height: 100vh;
     background-image: url(/assets/background.jpg);
     background-size: cover;
     background-repeat: no-repeat;
@@ -33,5 +37,7 @@ body {
 }
 
 canvas {
+    max-width: 100%;
+    max-height: 100%;
     background-color: rgba(0, 0, 0, 0.9);
 }

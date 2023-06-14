@@ -38,8 +38,9 @@ class App {
         });
         this.#player.bindEvents();
 
-        this.#renderStatusScreen("DODGE", "Press space to start");
+        this.#renderStatusScreen("DODGE", "Press space or click to start");
         document.addEventListener("keydown", this.#handleKeydown.bind(this));
+        document.addEventListener("click", this.#handleTouchStart.bind(this));
         this.#bullets = [];
         this.#aimedBullets = [];
         this.#timeStamp = 0;
@@ -57,6 +58,16 @@ class App {
             return;
         }
 
+        this.#player.useKeyboard = true;
+        this.#gameStart();
+    }
+
+    #handleTouchStart() {
+        if (!this.#gameOver) {
+            return;
+        }
+
+        this.#player.useKeyboard = false;
         this.#gameStart();
     }
 
@@ -134,7 +145,10 @@ class App {
 
     #render(this: App, time: number, stamp = false) {
         if (this.#gameOver) {
-            this.#renderStatusScreen("Game Over", "Press space to retry");
+            this.#renderStatusScreen(
+                "Game Over",
+                "Press space or click to retry"
+            );
             return;
         }
 
