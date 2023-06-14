@@ -82,7 +82,7 @@ class App {
                 getRandomIntInclusive(1, 3) * (x < halfSize ? 1 : -1),
             yAcceleration:
                 getRandomIntInclusive(1, 3) * (y < halfSize ? 1 : -1),
-            color: "white",
+            color: "#FF8551",
         });
     }
 
@@ -106,7 +106,7 @@ class App {
             size,
             xAcceleration,
             yAcceleration,
-            color: "skyblue",
+            color: "#9AC5F4",
         });
     }
 
